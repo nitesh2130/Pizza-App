@@ -1,6 +1,5 @@
 // import { useState } from 'react'
 import { Register } from "./components/Register";
-import { Demo } from "./pages/Demo";
 import Order from "./components/Order";
 import Cart from "./components/Cart";
 import Home from "./components/Home";
@@ -14,9 +13,14 @@ function App() {
     // <Demo />
     // <Router>
     <Routes>
-      <Route path="/demo" element={<Demo />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route
+        path="/order"
+        element={<Order pizzaName={""} pizzaCount={0} totalAmount={0} />}
+      />
     </Routes>
     // </Router>
   );
