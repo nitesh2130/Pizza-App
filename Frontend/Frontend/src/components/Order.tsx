@@ -1,60 +1,46 @@
-import React, { useState } from 'react';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-interface PlaceOrderProps {
-  pizzaName: string;
-  pizzaCount: number;
-  totalAmount: number;
-}
-
-const PlaceOrder: React.FC<PlaceOrderProps> = ({ pizzaName, pizzaCount, totalAmount }) => {
-  const [address, setAddress] = useState('');
-  const [orderPlaced, setOrderPlaced] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (address.trim() === '') {
-      alert('Please enter a valid address');
-      return;
-    }
-    setOrderPlaced(true);
-  };
+const OrderSuccess: React.FC = () => {
+  const navigate = useNavigate();
 
   return (
-    <div className="mt-10 p-6 bg-white rounded-lg shadow-xl max-w-md mx-auto border border-gray-200">
-      <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">Place Your Order</h2>
-      
-      {orderPlaced ? (
-        <div className="text-center text-gray-700">
-          <h3 className="text-2xl font-bold text-green-600">Order Placed Successfully!</h3>
-          <p className="mt-2">Pizza: <span className="font-medium">{pizzaName}</span></p>
-          <p>Quantity: <span className="font-medium">{pizzaCount}</span></p>
-          <p>Total Amount: <span className="font-medium">${totalAmount}</span></p>
-          <p className="mt-4">Shipping to: <span className="font-medium">{address}</span></p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Shipping Address</label>
-            <input
-              type="text"
-              id="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your full address"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md text-center border border-gray-200">
+        {/* Success Icon (SVG) */}
+        <div className="flex justify-center">
+          <svg
+            className="h-16 w-16 text-green-500 animate-bounce"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
           >
-            Place Order
-          </button>
-        </form>
-      )}
+            <path
+              fillRule="evenodd"
+              d="M12 2a10 10 0 100 20 10 10 0 000-20zM10 15.172l5.657-5.657a1 1 0 10-1.414-1.414L10 12.344l-2.243-2.243a1 1 0 10-1.414 1.414L10 15.172z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+
+        {/* Success Message */}
+        <h2 className="text-3xl font-semibold text-gray-800 mt-4">
+          Order Placed Successfully!
+        </h2>
+        <p className="text-gray-600 mt-2 text-lg">
+          Your delicious pizza is on the way! 🍕
+        </p>
+
+        {/* Button to Home */}
+        <button
+          onClick={() => navigate("/home")}
+          className="mt-6 bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300 shadow-md hover:shadow-lg"
+        >
+          Go to Home
+        </button>
+      </div>
     </div>
   );
 };
 
-export default PlaceOrder;
+export default OrderSuccess;

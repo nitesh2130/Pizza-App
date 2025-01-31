@@ -41,14 +41,15 @@ export const Login: React.FC = () => {
 
     setErrors(newErrors);
 
-    if (isValid) {
+    const response = await axios.post(apiUrlLogin, formData);
+    const data = response.data;
+    if (data) {
       alert("Login successful!");
-
-      const response = await axios.post(apiUrlLogin, formData);
-      const data = response.data;
-      localStorage.setItem("accessToken", data.access_token);
-      console.log(data.message);
+      navigate("/home");
     }
+    localStorage.setItem("accessToken", data.access_token);
+    localStorage.setItem("userId", data.user);
+    console.log(data.message);
   };
 
   return (

@@ -17,10 +17,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/home" element={<Home />} />
       <Route path="/cart" element={<Cart />} />
-      <Route
-        path="/order"
-        element={<Order pizzaName={""} pizzaCount={0} totalAmount={0} />}
-      />
+      <Route path="/order" element={<Order />} />
     </Routes>
     // </Router>
   );

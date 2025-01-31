@@ -1,13 +1,18 @@
 import axios from "axios";
 import { Key, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PizzaApp = () => {
   const [price, setPrice] = useState(20);
   const [ingredientData, setIngredientData] = useState([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  //   const [pizzaData, setPizzaData] = useState({});
 
+  const navigate = useNavigate();
+  const apiUrlToSavePizza = "http://localhost:3000/pizza/select";
   const apiUrlGetIngredient = "http://localhost:3000/pizza/";
   const accessToken = localStorage.getItem("accessToken");
+  const userId = localStorage.getItem("userId");
 
   async function apiIngredient() {
     const response = await axios.get(apiUrlGetIngredient);
@@ -18,20 +23,43 @@ const PizzaApp = () => {
     apiIngredient();
   }, []);
 
-  const toggleIngredient = (ingredient: { name: string; price: number }) => {
+  const toggleIngredient = (ingredient: {
+    ingredientItem: string;
+    ingredientPrice: number;
+  }) => {
     setSelectedIngredients((prev) =>
-      prev.includes(ingredient.name)
-        ? prev.filter((item) => item !== ingredient.name)
-        : [...prev, ingredient.name]
+      prev.includes(ingredient.ingredientItem)
+        ? prev.filter((item) => item !== ingredient.ingredientItem)
+        : [...prev, ingredient.ingredientItem]
     );
-    console.log(ingredient);
   };
 
-  const handleSubmit = () => {
-    // Here, you can handle the submitted ingredients (e.g., send them to an API or log them)
-    console.log("Selected Ingredients:", selectedIngredients);
-    // Optionally, you can also alert the user about the submission
-    alert(`Ingredients submitted: ${selectedIngredients.join(", ")}`);
+  const handleSubmit = async () => {
+    if (!accessToken) {
+      navigate("/login");
+    } else {
+      const pizzaData = {
+        ingredientName: selectedIngredients,
+        pizzaBasePrice: price,
+        userId: userId,
+      };
+      // This we will be handle the submitted ingredients
+      console.log("Selected Ingredients:", selectedIngredients);
+      const response = await axios.post(apiUrlToSavePizza, pizzaData, {
+        headers: {
+          Authorization: "Bearer accessToken",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response.data);
+      const pizzaId = response.data.id;
+      console.log(pizzaId);
+      localStorage.setItem("pizzaData", response.data);
+      navigate("/cart");
+
+      // Optionally, you can also alert the user about the submission
+      alert(`Ingredients submitted: ${selectedIngredients.join(", ")}`);
+    }
   };
 
   return (
@@ -154,7 +182,7 @@ const PizzaApp = () => {
           className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition"
           onClick={handleSubmit}
         >
-          Submit Ingredients
+          Add To Cart
         </button>
       </div>
     </div>
